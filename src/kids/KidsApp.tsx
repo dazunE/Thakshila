@@ -8,7 +8,7 @@ import { kidsBrain } from '../tutor/brain';
 import { listenErrorMessage } from '../voice/speech';
 import { BOARD_THEMES } from '../whiteboard/themes';
 import { Whiteboard } from '../whiteboard/Whiteboard';
-import { OwlTeacher, type OwlMood } from './OwlTeacher';
+import { ChalkBuddy, type BuddyMood } from './ChalkBuddy';
 
 const TOPICS = [
   { icon: '🍕', label: 'Fractions', q: 'What is a fraction?' },
@@ -63,7 +63,7 @@ export function KidsApp({ autoStart, onSwitch }: { autoStart: boolean; onSwitch:
   }, [mic.error]);
 
   const playing = s.player.playing;
-  const mood: OwlMood = mic.listening ? 'listening' : cheering ? 'cheer' : s.thinking ? 'thinking' : playing ? 'talking' : 'idle';
+  const mood: BuddyMood = mic.listening ? 'listening' : cheering ? 'cheer' : s.thinking ? 'thinking' : playing ? 'talking' : 'idle';
 
   const ask = (text: string) => {
     const t = text.trim();
@@ -97,14 +97,14 @@ export function KidsApp({ autoStart, onSwitch }: { autoStart: boolean; onSwitch:
             setVoiceOn={s.setVoiceOn}
             settings={s.voice}
             setSettings={s.setVoice}
-            sample="Hello! I'm Professor Hoot. Let's learn something fun today!"
+            sample="Hi! I'm Chalky. Let's draw something fun today!"
           />
         </header>
 
         <div className="k-teacher">
-          <OwlTeacher mood={mood} size={118} />
+          <ChalkBuddy mood={mood} size={104} />
           <div className="k-teacher-text">
-            <div className="k-plaque">Professor Hoot</div>
+            <div className="k-plaque">Chalky</div>
             <div className="k-status" aria-live="polite">
               {status}
             </div>
@@ -127,7 +127,7 @@ export function KidsApp({ autoStart, onSwitch }: { autoStart: boolean; onSwitch:
             />
           ))}
           {s.thinking && (
-            <div className="kb tutor thinking" aria-label="Professor Hoot is thinking">
+            <div className="kb tutor thinking" aria-label="Chalky is thinking">
               <span className="dots">
                 <i />
                 <i />
@@ -209,7 +209,7 @@ export function KidsApp({ autoStart, onSwitch }: { autoStart: boolean; onSwitch:
             {s.celebration > 0 && cheering && <Burst key={s.celebration} glyphs={['⭐', '🌟', '✨', '⭐']} />}
             {!started && (
               <div className="k-start">
-                <OwlTeacher mood="idle" size={130} />
+                <ChalkBuddy mood="idle" size={120} />
                 <p>Class is about to begin!</p>
                 <button onClick={begin}>Start class</button>
               </div>

@@ -2,7 +2,7 @@
 
 An AI tutor concept where the tutor **talks and draws at the same time**. The conversation sits on the left (30%) and the board on the right (70%). It comes in two versions:
 
-- **Classroom (ages 6–12):** Professor Hoot, an animated owl, teaches on a chalkboard. Children tap a big mic button or a picture card to ask, follow the words as they're read aloud, and earn stars for answering check-in questions.
+- **Classroom (ages 6–12):** Chalky, a living stick of chalk, teaches on a chalkboard. Children tap a big mic button or a picture card to ask, follow the words as they're read aloud, and earn stars for answering check-in questions.
 - **Study (ages 13–18):** Atlas works through problems step by step. The board changes with the subject: graph paper for Maths, blueprint for Physics, a lab notebook for Chemistry, and a sketchbook for Biology.
 
 📄 **Concept document:** [`docs/CONCEPT.md`](docs/CONCEPT.md)
@@ -40,7 +40,7 @@ Every answer is a **lesson**: a list of steps, each with a sentence to say and d
 ```
 src/
   App.tsx       landing: pick Classroom or Study
-  kids/         classroom screen and Professor Hoot
+  kids/         classroom screen and Chalky
   teens/        study screen
   shared/       session state (chat, check-ins, stars), mic, voice settings, read-along
   tutor/        lessons, brains, lesson player

@@ -1321,151 +1321,181 @@ button:disabled {
   box-shadow: 0 5px 0 var(--k-ink);
 }
 
-/* Professor Hoot */
-.owl {
+/* Chalky, the chalk-stick teacher */
+.ck {
   flex: none;
   overflow: visible;
 }
 
-.owl-body {
-  fill: #8d5b3a;
+.ck-shadow {
+  fill: rgb(43 33 24 / 0.13);
 }
 
-.owl-wing {
-  fill: #74472b;
+.ck-body {
+  fill: #fbf8ef;
 }
 
-.owl-belly {
-  fill: #f4dcb5;
-}
-
-.owl-scallop {
+.ck-outline,
+.ck-line,
+.ck-cap-edge,
+.ck-brow,
+.ck-smile {
   fill: none;
-  stroke: #d9b98a;
-  stroke-width: 2;
+  stroke: #2b2118;
+  stroke-width: 3.5;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.owl-face {
-  fill: #f1d3a6;
+.ck-cap {
+  fill: #ffd84d;
 }
 
-.owl-eye {
+.ck-cap-edge {
+  stroke-width: 2.5;
+}
+
+.ck-hand {
+  fill: #fbf8ef;
+  stroke: #2b2118;
+  stroke-width: 3;
+}
+
+.ck-shoe {
+  fill: #f05d5e;
+  stroke: #2b2118;
+  stroke-width: 3;
+}
+
+.ck-speck {
+  fill: #d8d2c2;
+}
+
+.ck-eye {
+  fill: #2b2118;
+}
+
+.ck-glint {
   fill: #fff;
 }
 
-.owl-pupil {
-  fill: #2b1d14;
+.ck-cheek {
+  fill: #f7a1a8;
+  opacity: 0.7;
 }
 
-.owl-glint {
-  fill: #fff;
+.ck-mouth {
+  fill: #9b2f3a;
+  stroke: #2b2118;
+  stroke-width: 3;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center top;
 }
 
-.owl-lid {
-  fill: #8d5b3a;
+.ck-lid {
+  fill: #fbf8ef;
   transform-box: fill-box;
   transform-origin: top;
   transform: scaleY(0);
-  animation: blink 4.5s infinite;
+  animation: blink 4.2s infinite;
 }
 
-.owl-glasses {
-  fill: none;
-  stroke: #2b1d14;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-}
-
-.owl-beak {
-  fill: #f59e2a;
-  stroke: #b8650f;
-  stroke-width: 1.5;
-  stroke-linejoin: round;
-}
-
-.owl-cheek {
-  fill: #f49c9c;
-  opacity: 0.6;
-}
-
-.owl-cap {
-  fill: #2b2a3a;
-  stroke: #2b2a3a;
+.ck-think circle,
+.ck-dust circle {
+  fill: #fbf8ef;
+  stroke: #2b2118;
   stroke-width: 2;
-  stroke-linejoin: round;
 }
 
-.owl-tassel-cord {
-  fill: none;
-  stroke: #ffc93c;
-  stroke-width: 3;
-  stroke-linecap: round;
+.ck-think,
+.ck-dust {
+  opacity: 0;
 }
 
-.owl-tassel-end {
-  fill: #ffc93c;
-}
-
-.owl-tassel {
-  transform-origin: 80px 34px;
-  animation: tassel 3s ease-in-out infinite;
-}
-
-.owl-feet {
-  fill: none;
-  stroke: #e58a1f;
-  stroke-width: 4;
-  stroke-linecap: round;
-}
-
-.owl-all,
-.owl-head,
-.owl-pupils,
-.owl-point,
-.owl-beak-low {
+.ck-all,
+.ck-arm-l,
+.ck-arm-r,
+.ck-pupils {
   transform-box: view-box;
   transition: transform 0.3s ease;
 }
 
-.owl-head {
-  transform-origin: 80px 110px;
+.ck-all {
+  transform-origin: 80px 165px;
 }
 
-.owl-point {
-  transform-origin: 122px 86px;
+.ck-arm-l {
+  transform-origin: 53px 100px;
 }
 
-.owl-talking .owl-beak-low {
-  animation: talk 0.28s ease-in-out infinite alternate;
+.ck-arm-r {
+  transform-origin: 107px 100px;
 }
 
-.owl-talking .owl-point {
-  transform: rotate(-62deg);
+.ck-idle .ck-all {
+  animation: ck-bob 2.8s ease-in-out infinite;
 }
 
-.owl-listening .owl-head {
-  transform: rotate(-9deg);
+.ck-talking .ck-smile {
+  opacity: 0;
 }
 
-.owl-listening .owl-pupils {
-  transform: translate(-3px, 0);
+.ck-talking .ck-mouth {
+  opacity: 1;
+  animation: ck-talk 0.26s ease-in-out infinite alternate;
 }
 
-.owl-thinking .owl-pupils {
-  transform: translate(3px, -5px);
+.ck-talking .ck-arm-r {
+  transform: rotate(-80deg);
 }
 
-.owl-thinking .owl-head {
-  transform: rotate(5deg);
+.ck-talking .ck-all {
+  transform: rotate(4deg);
 }
 
-.owl-cheer .owl-all {
+.ck-listening .ck-arm-l {
+  transform: rotate(100deg);
+}
+
+.ck-listening .ck-all {
+  transform: rotate(-6deg);
+}
+
+.ck-thinking .ck-pupils {
+  transform: translate(2px, -4px);
+}
+
+.ck-thinking .ck-think {
+  opacity: 1;
+}
+
+.ck-thinking .ck-think circle {
+  animation: ck-float 1.2s ease-in-out infinite alternate;
+}
+
+.ck-thinking .ck-think circle:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.ck-thinking .ck-think circle:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.ck-cheer .ck-all {
   animation: hop 0.5s ease-in-out 3;
 }
 
-.owl-cheer .owl-point {
-  transform: rotate(-110deg);
+.ck-cheer .ck-arm-l {
+  transform: rotate(115deg);
+}
+
+.ck-cheer .ck-arm-r {
+  transform: rotate(-115deg);
+}
+
+.ck-cheer .ck-dust {
+  animation: ck-puff 1.2s ease-out 2;
 }
 
 @keyframes blink {
@@ -1479,21 +1509,38 @@ button:disabled {
   }
 }
 
-@keyframes talk {
+@keyframes ck-bob {
+  50% {
+    transform: translateY(-4px) rotate(-2deg);
+  }
+}
+
+@keyframes ck-talk {
+  from {
+    transform: scaleY(0.35);
+  }
+}
+
+@keyframes ck-float {
   to {
-    transform: translateY(4px);
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes ck-puff {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.4) translateY(-8px);
   }
 }
 
 @keyframes hop {
   50% {
     transform: translateY(-14px);
-  }
-}
-
-@keyframes tassel {
-  50% {
-    transform: rotate(6deg);
   }
 }
 

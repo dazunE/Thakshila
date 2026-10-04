@@ -403,7 +403,7 @@ export const greeting: Lesson = {
   subject: 'Chat',
   steps: [
     {
-      say: "Hello! I'm Professor Hoot, your teacher. Ask me anything, and I'll draw the answer on my chalkboard!",
+      say: "Hi! I'm Chalky. I'm a piece of chalk, and drawing is my favourite thing! Ask me anything, and I'll draw you the answer.",
       draw: [
         { op: 'clear' },
         { op: 'circle', center: [500, 280], r: 130, fill: INK.yellow, color: INK.orange, width: 6 },

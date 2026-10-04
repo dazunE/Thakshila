@@ -2,7 +2,7 @@
 
 > An AI tutor that explains things the way a good teacher does at a board: it talks and draws at the same time. It comes in two versions, a chalkboard classroom for ages 6–12 and a study app for ages 13–18 whose board changes with the subject.
 
-"Doodle Tutor", "Professor Hoot" (kids) and "Atlas" (high school) are working names.
+"Doodle Tutor", "Chalky" (kids) and "Atlas" (high school) are working names.
 
 ---
 
@@ -33,12 +33,12 @@ Both versions share the same lesson format, board renderer, voice and player. Wh
 
 | | Kids (6–12): **Classroom** | High school (13–18): **Study** |
 |---|---|---|
-| Tutor | Professor Hoot, an animated owl teacher | Atlas, a voice "orb" with a live waveform; no mascot |
+| Tutor | Chalky, a living stick of chalk: the thing that draws on the board | Atlas, a voice "orb" with a live waveform; no mascot |
 | Board | Green chalkboard in a wooden frame with a chalk tray | Changes with the subject (see 2.3) |
 | Asking | A big **Tap and ask me!** mic button, plus picture topic cards; typing is secondary | Text box with a mic button; subject cards with sample problems |
 | Reading | Big rounded text; each word lights up as it's spoken (read-along) | Transcript style; the current sentence is outlined, upcoming words dimmed |
 | Check-ins | Chunky coloured answer buttons; a wrong answer gets a spoken hint and a retry | A/B/C quiz card with the same hint-and-retry flow |
-| Reward | Stars counter, a star burst over the board, a gold star stamped in the corner, and the owl jumps | A quiet ✓ on the board and a short confirmation |
+| Reward | Stars counter, a star burst over the board, a gold star stamped in the corner, and Chalky jumps in a puff of chalk dust | A quiet ✓ on the board and a short confirmation |
 | Voice | Slightly slower and higher (0.92× speed) | Natural speed (1.02×) |
 
 ### 2.1 Kids: the classroom
@@ -46,9 +46,9 @@ Both versions share the same lesson format, board renderer, voice and player. Wh
 ```
 ┌──────────── 30% ─────────────┬───────────────────────── 70% ──────────────────────────┐
 │ Doodle Classroom  ⭐3  🔊 ⚙   │ ╔═ What is a fraction?  ● ● ◉ ○ ○ ○ ══════════════════╗ │
-│┌────┐ ▭Professor Hoot▭        │ ║                                                    ║ │
-││ 🦉 │  Watch the board!       │ ║        ╭───┬───╮          1  ← pieces we have      ║ │
-│└────┘ (wing points to board)  │ ║       │ ░░ │▒▒▒▒│        ───                       ║ │
+│┌────┐ ▭Chalky▭                │ ║                                                    ║ │
+││ ✏️ │  Watch the board!       │ ║        ╭───┬───╮          1  ← pieces we have      ║ │
+│└────┘ (arm points to board)   │ ║       │ ░░ │▒▒▒▒│        ───                       ║ │
 │ ┌──────────────────────────┐  │ ║       │────┼────│         4  ← pieces in all       ║ │
 │ │ Now we [cut] it into 4…  │  │ ║        ╰───┴───╯   🖍                            ║ │
 │ └──────────────────────────┘  │ ║                                    🌟 (reward)    ║ │
@@ -59,12 +59,12 @@ Both versions share the same lesson format, board renderer, voice and player. Wh
 └──────────────────────────────┴─────────────────────────────────────────────────────────┘
 ```
 
-- **Professor Hoot** blinks while idle, moves its beak while talking, points a wing at the board while explaining, tilts its head while listening, looks up while thinking, and jumps when the child gets an answer right.
+- **Chalky** is a stick of white chalk dipped in yellow, with a face, little arms and red sneakers. The teacher *is* the chalk, so it ties the character to the drawing. It bobs and blinks while idle, talks with an open mouth and points at the board while explaining, cups a hand to its ear while listening, looks up with thought bubbles while thinking, and jumps with both arms up in a puff of chalk dust when the child gets an answer right.
 - **Voice first.** Many 6-year-olds can't type. The biggest button on the screen is the microphone. Picture cards (🍕 Fractions, 🌧️ Rain…) start a lesson with one tap. Typing hides behind a small keyboard button.
 - **Read-along.** The sentence being spoken is shown large, and the current word is highlighted like a karaoke line, so early readers can follow along.
 - **Chalk that feels like chalk.** Strokes are thicker and dusty, fills are pastel, and the tutor holds a chalk stick that follows the drawing. The tray has "My chalk" so children can draw too, and an eraser to wipe the board.
 - **Stars.** Every correct check-in earns a star, with a burst of stars and a gold star stamped on the board.
-- **Gentle mistakes.** A wrong answer greys out that button with a shake, and Hoot gives a spoken hint ("Count the slices on the pizza…"). The child tries again.
+- **Gentle mistakes.** A wrong answer greys out that button with a shake, and Chalky gives a spoken hint ("Count the slices on the pizza…"). The child tries again.
 
 ### 2.2 High school: the study app
 
@@ -181,7 +181,7 @@ student speaks or types at any point ─► abort current lesson, answer the new
 
 ### 4.1 The model call
 
-The model gets a system prompt with the tutor's persona (Professor Hoot or Atlas), the student's level and the teaching rules, plus one tool:
+The model gets a system prompt with the tutor's persona (Chalky or Atlas), the student's level and the teaching rules, plus one tool:
 
 ```jsonc
 {
@@ -308,7 +308,7 @@ Children are the users, so this is a design requirement from the start, not an a
 | Kids lessons / high-school lessons | `src/tutor/kidsLessons.ts`, `src/tutor/teenLessons.ts` |
 | Chat, check-ins, stars (shared by both versions) | `src/shared/useTutorSession.ts` |
 | Voice in and out, voice picker | `src/voice/speech.ts`, `src/shared/VoicePanel.tsx`, `src/shared/useMic.ts` |
-| Kids classroom and Professor Hoot | `src/kids/KidsApp.tsx`, `src/kids/OwlTeacher.tsx` |
+| Kids classroom and Chalky | `src/kids/KidsApp.tsx`, `src/kids/ChalkBuddy.tsx` |
 | High-school study app | `src/teens/TeenApp.tsx` |
 | Landing (pick a version) | `src/App.tsx` |
 
@@ -322,5 +322,5 @@ To move from prototype to MVP, replace the two stand-in brains with implementati
 2. **Curriculum**: which country's or which board's syllabus should the first version follow?
 3. **Languages**: English only at first, or several languages from the start?
 4. **Answers vs. guidance**: should the tutor ever give the direct answer to a homework problem?
-5. **Character**: keep one owl mascot for kids, or let the child pick or customise an avatar?
+5. **Character**: keep Chalky as the one mascot for kids, or let the child pick or customise one (for example chalk colours)?
 6. **Age switch**: should students pick their version, or should it follow a grade set by a parent or teacher?

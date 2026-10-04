@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { KidsApp } from './kids/KidsApp';
-import { OwlTeacher } from './kids/OwlTeacher';
+import { ChalkBuddy } from './kids/ChalkBuddy';
 import { TeenApp } from './teens/TeenApp';
 import { stopSpeaking, unlockSpeech } from './voice/speech';
 
@@ -52,7 +52,7 @@ function Landing({ onChoose }: { onChoose: (a: Audience) => void }) {
       <div className="l-cards">
         <button className="l-card l-kids" onClick={() => onChoose('kids')}>
           <div className="l-kids-board">
-            <OwlTeacher mood="idle" size={96} />
+            <ChalkBuddy mood="idle" size={86} />
             <svg viewBox="0 0 200 120" className="l-chalk" aria-hidden>
               <circle cx="60" cy="60" r="38" />
               <path d="M60 22 V98 M22 60 H98" />
@@ -65,7 +65,7 @@ function Landing({ onChoose }: { onChoose: (a: Audience) => void }) {
           <div className="l-card-body">
             <span className="l-age">Ages 6–12</span>
             <h2>Classroom</h2>
-            <p>Professor Hoot teaches on a chalkboard. Tap the mic and talk, or pick a picture. Answer questions to earn stars.</p>
+            <p>Chalky, a stick of chalk that loves to draw, teaches on the chalkboard. Tap the mic and talk, or pick a picture. Answer questions to earn stars.</p>
             <span className="l-go">Go to class →</span>
           </div>
         </button>
