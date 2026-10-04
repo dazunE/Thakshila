@@ -61,13 +61,26 @@ export interface LessonStep {
   draw: DrawCommand[];
 }
 
+export type Subject = 'Maths' | 'Science' | 'Geography' | 'Physics' | 'Chemistry' | 'Biology' | 'Chat';
+
+/** The question the tutor hands back at the end of a lesson. */
+export interface CheckIn {
+  question: string;
+  /** Tap-to-answer options. Without them the student answers in their own words. */
+  choices?: string[];
+  answer?: number;
+  /** Said when the student picks the right answer. */
+  praise?: string;
+  /** Said when they pick a wrong one; they can try again. */
+  hint?: string;
+}
+
 export interface Lesson {
   id: string;
   title: string;
-  subject: 'Maths' | 'Science' | 'Geography' | 'Chat';
+  subject: Subject;
   steps: LessonStep[];
-  /** Question the tutor hands back to the student at the end. */
-  checkIn?: string;
+  checkIn?: CheckIn;
 }
 
 /** An element that currently lives on the board. */
@@ -76,22 +89,28 @@ export interface BoardElement {
   cmd: ShapeCommand;
 }
 
+/**
+ * Colours are theme tokens, not hex values. Each board theme (chalkboard,
+ * graph paper, blueprint, ...) maps them to its own palette, so the same
+ * lesson looks right on every board.
+ */
 export const INK = {
-  dark: '#1f2937',
-  blue: '#2563eb',
-  red: '#dc2626',
-  green: '#16a34a',
-  orange: '#ea580c',
-  purple: '#7c3aed',
-  brown: '#92400e',
-  gray: '#6b7280',
+  dark: 'var(--ink)',
+  blue: 'var(--ink-blue)',
+  red: 'var(--ink-red)',
+  green: 'var(--ink-green)',
+  orange: 'var(--ink-orange)',
+  purple: 'var(--ink-purple)',
+  brown: 'var(--ink-brown)',
+  gray: 'var(--ink-gray)',
+  onNight: 'var(--ink-on-night)',
   // fills
-  yellow: '#fde68a',
-  sun: '#fde047',
-  sky: '#bfdbfe',
-  leaf: '#bbf7d0',
-  pink: '#fbcfe8',
-  salmon: '#fca5a5',
-  night: '#1e3a8a',
-  cloud: '#f3f4f6',
+  yellow: 'var(--fill-yellow)',
+  sun: 'var(--fill-sun)',
+  sky: 'var(--fill-sky)',
+  leaf: 'var(--fill-leaf)',
+  pink: 'var(--fill-pink)',
+  salmon: 'var(--fill-salmon)',
+  night: 'var(--fill-night)',
+  cloud: 'var(--fill-cloud)',
 } as const;

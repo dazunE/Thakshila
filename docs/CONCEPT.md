@@ -1,66 +1,112 @@
 # Doodle Tutor: concept
 
-> An AI tutor for children aged 6–12 that explains things the way a good teacher does at a whiteboard: it talks and draws at the same time.
+> An AI tutor that explains things the way a good teacher does at a board: it talks and draws at the same time. It comes in two versions, a chalkboard classroom for ages 6–12 and a study app for ages 13–18 whose board changes with the subject.
 
-"Dot" (an owl) and "Doodle Tutor" are working names.
+"Doodle Tutor", "Professor Hoot" (kids) and "Atlas" (high school) are working names.
 
 ---
 
 ## 1. The idea
 
-Children learn best when they hear an explanation and see it built up in front of them, one piece at a time. A chatbot can only produce a wall of text. A video plays the same way for everyone and can't be asked questions.
+Students learn best when they hear an explanation and see it built up in front of them, one piece at a time. A chatbot can only produce a wall of text. A video plays the same way for everyone and can't be asked questions.
 
-Doodle Tutor combines the two. The child asks a question by typing or speaking. The tutor answers out loud and draws the answer on a whiteboard as it speaks. Each sentence comes with its own strokes: the pizza appears while it says "here is a pizza", and the cut lines appear while it says "we cut it into four". The child can interrupt at any time, ask a follow-up, or pick up a pen and draw on the board themselves.
+Doodle Tutor combines the two. The student asks a question by speaking or typing. The tutor answers out loud and draws the answer as it speaks. Each sentence comes with its own strokes: the pizza appears while it says "here is a pizza", and the cut lines appear while it says "we cut it into four". The student can interrupt at any time, ask a follow-up, answer the tutor's check-in question, or draw on the board themselves.
 
 The same approach covers any subject that can be sketched:
 
-| Subject | Example question | What the tutor draws |
+| Level | Subject | Example question | What the tutor draws |
+|---|---|---|---|
+| Kids | Maths | "What is ¼?" | A pizza cut into 4, one slice shaded, then the fraction with labels |
+| Kids | Maths | "What is 3 × 5?" | Rows of dots, row totals, the sum, then the turned-around array |
+| Kids | Science | "How does rain happen?" | Sea, sun, evaporation arrows, a cloud, rain, a river back to the sea |
+| Kids | Geography | "Why is there night?" | The Sun, a spinning Earth, the day side and the night side |
+| High school | Maths | "Solve x² − 5x + 6 = 0" | Worked factorisation on the left, the parabola and its roots on the right |
+| High school | Physics | "Explain projectile motion" | Trajectory, velocity components, gravity, the two equations of motion |
+| High school | Chemistry | "Balance H₂ + O₂ → H₂O" | Molecules as atoms, an atom count that goes from ✗ to ✓ |
+| High school | Biology | "What's inside a cell?" | A labelled animal cell, built one organelle at a time |
+
+---
+
+## 2. Two versions, one engine
+
+Both versions share the same lesson format, board renderer, voice and player. What differs is the look, the tone of voice, the way students ask, and the way they're rewarded.
+
+| | Kids (6–12): **Classroom** | High school (13–18): **Study** |
 |---|---|---|
-| Maths | "What is ¼?" | A pizza cut into 4, one slice shaded, then the fraction with labels |
-| Maths | "What is 3 × 5?" | Rows of dots, row totals, the sum, then the turned-around array |
-| Science | "How does rain happen?" | Sea, sun, evaporation arrows, a cloud, rain, a river back to the sea |
-| Science | "How do plants eat?" | A plant, its roots, sunlight, CO₂ in, oxygen out |
-| Geography | "Why is there night?" | The Sun, a spinning Earth, the day side and the night side |
-| English | "What is a verb?" | A stick figure running, with the action word circled in a sentence |
-| History | "Who built the pyramids?" | A timeline, a pyramid, workers moving blocks |
+| Tutor | Professor Hoot, an animated owl teacher | Atlas, a voice "orb" with a live waveform; no mascot |
+| Board | Green chalkboard in a wooden frame with a chalk tray | Changes with the subject (see 2.3) |
+| Asking | A big **Tap and ask me!** mic button, plus picture topic cards; typing is secondary | Text box with a mic button; subject cards with sample problems |
+| Reading | Big rounded text; each word lights up as it's spoken (read-along) | Transcript style; the current sentence is outlined, upcoming words dimmed |
+| Check-ins | Chunky coloured answer buttons; a wrong answer gets a spoken hint and a retry | A/B/C quiz card with the same hint-and-retry flow |
+| Reward | Stars counter, a star burst over the board, a gold star stamped in the corner, and the owl jumps | A quiet ✓ on the board and a short confirmation |
+| Voice | Slightly slower and higher (0.92× speed) | Natural speed (1.02×) |
 
----
-
-## 2. Screen layout
+### 2.1 Kids: the classroom
 
 ```
-┌────────────── 30% ──────────────┬──────────────────────── 70% ────────────────────────┐
-│ 🦉 Dot · explaining…      🔊    │ ● What is a fraction?  ▬▬▬▬▭▭      ⏹  🖍 My pen  🧽  │
-│─────────────────────────────────│──────────────────────────────────────────────────────│
-│                 What is ¼?  [me]│                                                      │
-│ ➗ Maths · What is a fraction? ↻│          ╭─────╮                  1   ← pieces we    │
-│ Let's imagine a yummy pizza!    │        ╱  🍕 │ ██ ╲               ──       have       │
-│ ┃ Now we share it with 4      ┃ │       │──────┼────│             4   ← pieces in all  │
-│ ┃ friends… (currently spoken) ┃ │        ╲     │    ╱    ✏️                           │
-│                                 │          ╰─────╯                                     │
-│ 🤔 Your turn: how many quarters │                         "one quarter"                │
-│ make the whole pizza?           │                                                      │
-│─────────────────────────────────│                                                      │
-│ [What is ¼?] [How does rain…]   │                                                      │
-│ 🎤 [ Ask Dot anything…  ] [Ask] │                                                      │
-└─────────────────────────────────┴──────────────────────────────────────────────────────┘
+┌──────────── 30% ─────────────┬───────────────────────── 70% ──────────────────────────┐
+│ Doodle Classroom  ⭐3  🔊 ⚙   │ ╔═ What is a fraction?  ● ● ◉ ○ ○ ○ ══════════════════╗ │
+│┌────┐ ▭Professor Hoot▭        │ ║                                                    ║ │
+││ 🦉 │  Watch the board!       │ ║        ╭───┬───╮          1  ← pieces we have      ║ │
+│└────┘ (wing points to board)  │ ║       │ ░░ │▒▒▒▒│        ───                       ║ │
+│ ┌──────────────────────────┐  │ ║       │────┼────│         4  ← pieces in all       ║ │
+│ │ Now we [cut] it into 4…  │  │ ║        ╰───┴───╯   🖍                            ║ │
+│ └──────────────────────────┘  │ ║                                    🌟 (reward)    ║ │
+│ ┌ Your turn! How many… ────┐  │ ╚════════════════════════════════════════════════════╝ │
+│ │  [ 2 ]  [ 3 ]  [ 4 ]     │  │   [▬ My chalk]                          [▭ Wipe board] │
+│ 🍕  ✖️  🌧️  🌱  🌍            │                                                         │
+│ [ 🎤  Tap and ask me! ]  [⌨] │                                                         │
+└──────────────────────────────┴─────────────────────────────────────────────────────────┘
 ```
 
-**Left panel (30%): the conversation**
-- Dot's avatar pulses while it is talking. The status line reads *thinking…* or *explaining on the board*.
-- Every spoken sentence also appears as a chat bubble. The bubble being spoken right now is outlined, which helps children who are still learning to read follow along.
-- Each lesson starts with a chip showing the subject and title, plus a ↻ replay button.
-- Every lesson ends with a check-in question (yellow bubble), so the child does something instead of just watching.
-- Suggested questions sit above the input, a 🎤 button handles voice input, and 🔊 mutes or unmutes Dot.
+- **Professor Hoot** blinks while idle, moves its beak while talking, points a wing at the board while explaining, tilts its head while listening, looks up while thinking, and jumps when the child gets an answer right.
+- **Voice first.** Many 6-year-olds can't type. The biggest button on the screen is the microphone. Picture cards (🍕 Fractions, 🌧️ Rain…) start a lesson with one tap. Typing hides behind a small keyboard button.
+- **Read-along.** The sentence being spoken is shown large, and the current word is highlighted like a karaoke line, so early readers can follow along.
+- **Chalk that feels like chalk.** Strokes are thicker and dusty, fills are pastel, and the tutor holds a chalk stick that follows the drawing. The tray has "My chalk" so children can draw too, and an eraser to wipe the board.
+- **Stars.** Every correct check-in earns a star, with a burst of stars and a gold star stamped on the board.
+- **Gentle mistakes.** A wrong answer greys out that button with a shake, and Hoot gives a spoken hint ("Count the slices on the pizza…"). The child tries again.
 
-**Right panel (70%): the whiteboard**
-- A fixed 1000 × 640 drawing space, scaled to fit any screen.
-- Strokes animate as if drawn by hand. A ✏️ pencil follows Dot's pen. Text appears letter by letter in a handwriting font.
-- Dot can highlight things it has already drawn (a yellow glow) to point at them, and can erase them.
-- The toolbar shows the lesson title, a step progress bar, Stop, **My pen** (the child draws in purple), and Clear.
-- On phones the board goes on top and the chat below.
+### 2.2 High school: the study app
 
----
+```
+┌──────────── 30% ─────────────┬───────────────────────── 70% ──────────────────────────┐
+│ (|||) Atlas · step 3 of 6 🔊⚙ │ ■ Blueprint / Projectile motion  ▬▬▬▭▭    Stop Pen Clear│
+│ ┌ Maths ──────┐┌ Physics ───┐ │ ┌────────────────────────────────────────────────────┐ │
+│ │ Quadratics  ││ Projectiles│ │ │ x = vₓt          ╭──────╮            g = 9.8 m/s² ↓ │ │
+│ ┌ Chemistry ──┐┌ Biology ───┐ │ │ y = v_y t − ½gt² ╱  →    ╲→                         │ │
+│ │ Balancing   ││ Cells      │ │ │               ↑╱          ╲↓                        │ │
+│ ┃ Horizontally there is no   │ │      v₀ ↗θ  →╱              ╲                       │ │
+│ ┃ force, so vₓ stays…        │ │ ──────────────────────────────────── range R ───── │ │
+│ ┌ CHECK YOUR UNDERSTANDING ─┐ │ └────────────────────────────────────────────────────┘ │
+│ │ A  Zero   B  Max   C  vₓ  │ │                                                        │
+│ (🎤) [ Ask a question…  ] Ask │                                                        │
+└──────────────────────────────┴─────────────────────────────────────────────────────────┘
+```
+
+- Calm and focused: a dark interface, no mascot, no confetti rain. The accent colour follows the subject.
+- Lessons are denser: worked algebra, real units, labelled diagrams, the equations to remember.
+- Check-ins are short exam-style questions, each with a targeted hint for the common mistake.
+
+### 2.3 The board changes with the subject (high school)
+
+Each subject gets the material a student would use for it. The same drawing commands are recoloured by the theme, so one lesson works on any board.
+
+| Subject | Board | Look | Tutor's tool | Handwriting |
+|---|---|---|---|---|
+| Maths | **Graph paper** | White with a fine blue grid, blue and red pen | Pen | Kalam |
+| Physics | **Blueprint** | Deep blue with a white grid, crisp cyan and yellow lines | Drafting pen | Architects Daughter |
+| Chemistry | **Lab notebook** | Ruled lines and a red margin | Pen | Patrick Hand |
+| Biology | **Sketchbook** | Warm paper, pencil grain and watercolour fills | Pencil | Caveat |
+| (Kids, all subjects) | **Chalkboard** | Green slate, dusty chalk, pastel fills | Chalk stick | Patrick Hand |
+
+When the student moves to a new subject, the board's background, palette, stroke texture and tool change together.
+
+### 2.4 Layout rules for both versions
+
+- The conversation takes 30% of the width and the board 70%. On phones the board moves on top, sized to the drawing, with the conversation below.
+- The board is a fixed 1000 × 640 drawing space scaled to fit, so lessons look the same on every screen.
+- Every spoken sentence also appears as text (captions are always on).
+- Every lesson can be replayed, and the student can stop it or ask something new at any moment.
 
 ## 3. The core mechanism: lessons as "say + draw" steps
 
@@ -87,7 +133,13 @@ The tutor never paints pixels. It returns a **lesson**: an ordered list of steps
       ]
     }
   ],
-  "checkIn": "How many quarters do you need to make the whole pizza?"
+  "checkIn": {
+    "question": "How many quarters make one whole pizza?",
+    "choices": ["2", "3", "4"],
+    "answer": 2,
+    "praise": "Yes! Four quarters make one whole pizza.",
+    "hint": "Count the slices. How many pieces did we cut it into?"
+  }
 }
 ```
 
@@ -129,7 +181,7 @@ student speaks or types at any point ─► abort current lesson, answer the new
 
 ### 4.1 The model call
 
-The model gets a system prompt describing Dot's persona and teaching rules, plus one tool:
+The model gets a system prompt with the tutor's persona (Professor Hoot or Atlas), the student's level and the teaching rules, plus one tool:
 
 ```jsonc
 {
@@ -151,7 +203,18 @@ The model gets a system prompt describing Dot's persona and teaching rules, plus
           "required": ["say", "draw"]
         }
       },
-      "checkIn": { "type": "string", "description": "A question that makes the student think or act" }
+      "checkIn": {
+        "type": "object",
+        "description": "A question that makes the student think or act, with optional tap-to-answer choices, the correct index, praise, and a hint for a wrong answer",
+        "properties": {
+          "question": { "type": "string" },
+          "choices":  { "type": "array", "items": { "type": "string" } },
+          "answer":   { "type": "integer" },
+          "praise":   { "type": "string" },
+          "hint":     { "type": "string" }
+        },
+        "required": ["question"]
+      }
     },
     "required": ["title", "steps"]
   }
@@ -163,7 +226,7 @@ For a small reply ("Great job! That's right!") the model can answer with plain t
 ### 4.2 Context the model receives each turn
 - The conversation so far (text).
 - **Board state as a scene graph**: a compact list of what is on the board (`id`, type, position, label). This lets the model build on its last drawing ("now let's colour a second slice") instead of starting over.
-- **The student's drawing**: when the child uses *My pen*, the board is rendered to an image and sent to a vision-capable model. That way Dot can see that the child shaded 3 of the 4 slices and respond to it.
+- **The student's drawing**: when the child uses *My pen*, the board is rendered to an image and sent to a vision-capable model. That way the tutor can see that the child shaded 3 of the 4 slices and respond to it.
 - The learner profile: age or grade, language, and topics already covered.
 
 ### 4.3 Streaming for low latency
@@ -180,12 +243,15 @@ LLMs are weak at freehand coordinates. Options to add on top of the primitive co
 | Piece | Prototype | Production |
 |---|---|---|
 | Student → text | Browser `SpeechRecognition` | Streaming STT with voice-activity detection and child-speech tuning |
-| Text → Dot's voice | Browser `speechSynthesis` | Streaming neural TTS with a warm, consistent character voice; word timings so the bubble text can highlight word by word |
-| Barge-in | Typing or tapping 🎤 stops Dot | Always-on VAD: when the child starts talking, Dot stops mid-sentence and listens |
+| Text → tutor's voice | Browser `speechSynthesis` | Streaming neural TTS with a warm, consistent character voice; word timings so the bubble text can highlight word by word |
+| Barge-in | Typing or tapping 🎤 stops the tutor | Always-on VAD: when the student starts talking, the tutor stops mid-sentence and listens |
+| Read-along | Word-boundary events from the voice, or a time-based estimate when the voice doesn't report them | Word timings from the TTS provider |
+
+**How voice works in the prototype.** It uses the browser's built-in voices (Web Speech API), so it needs no key or server. Quality depends on the device: Safari on Mac and iPhone and Chrome's Google voices sound best. A grown-up can pick the voice and speed from the ⚙ menu. Browsers only allow speech after a click, so the tutor starts talking when the student presses Start (or picks a version). Voice *input* needs microphone access: it works when the app runs from its own address (for example `npm run dev` in Chrome, Edge or Safari), but embedded previews that block the microphone fall back to typing with a friendly message.
 
 ---
 
-## 5. Teaching approach for ages 6–12
+## 5. Teaching approach
 
 Written into the system prompt and enforced by tests:
 
@@ -193,10 +259,16 @@ Written into the system prompt and enforced by tests:
 - **Concrete before abstract**: pizzas before ¼, dots before ×, a puddle before "evaporation".
 - **Draw in the order you speak.** Never draw something before it has been mentioned.
 - **Always end with a check-in** the child can answer or draw, never with "any questions?"
-- **Socratic when practising**: for homework-style questions, Dot shows a similar example and guides with hints rather than handing over the answer.
+- **Socratic when practising**: for homework-style questions, the tutor shows a similar example and guides with hints rather than handing over the answer.
 - **Praise effort, not intelligence.** Treat mistakes as normal ("Lots of people think that! Let's look again…").
 - **Adapt the level**: if the child is stuck twice, drop down a level (bigger pictures, smaller numbers). If they answer quickly, add a challenge.
 - **Same visual language every time**: red for "what we have", blue for "the whole", green for answers.
+
+High school changes the defaults:
+- Show the method, not just the answer: every step of the working stays on the board, and the final answer is boxed.
+- Connect representations: algebra next to its graph, equations next to the diagram they describe.
+- Check-ins target the common misconception (sign errors, changing subscripts, "vertical velocity is maximum at the top").
+- A neutral, encouraging tone, without baby talk.
 
 ---
 
@@ -205,7 +277,7 @@ Written into the system prompt and enforced by tests:
 Children are the users, so this is a design requirement from the start, not an add-on.
 
 - **Content safety**: filter input and output, keep the model on learning topics, and redirect upsetting topics gently with a suggestion to talk to a trusted adult.
-- **No personal data collection**: Dot never asks for names, schools or addresses. Voice is transcribed and then discarded. Comply with COPPA, GDPR-K and local equivalents.
+- **No personal data collection**: the tutor never asks for names, schools or addresses. Voice is transcribed and then discarded. Comply with COPPA, GDPR-K and local equivalents.
 - **Parents and teachers**: a dashboard with topics covered, check-in answers, and lesson replays. Time limits, and the option to disable voice input.
 - **Accuracy**: core curriculum topics use reviewed lesson templates or diagram ops. Model-generated lessons for long-tail questions are sampled and reviewed.
 - **Accessibility**: captions are always on (the chat bubbles), reduced-motion mode, dyslexia-friendly font option, high-contrast board.
@@ -216,7 +288,7 @@ Children are the users, so this is a design requirement from the start, not an a
 
 | Phase | Scope |
 |---|---|
-| **0. Prototype (this repo)** | Layout, drawing language, animated renderer, voice in and out via browser APIs, 5 scripted lessons, student pen, interrupting |
+| **0. Prototype (this repo)** | Kids classroom and high-school study app, drawing language, 5 board materials, animated renderer, voice in and out with read-along, 9 scripted lessons with check-ins, stars, student pen, interrupting |
 | **1. MVP** | Real LLM behind `TutorBrain`, streamed step playback, scene-graph context, diagram library v1 (number line, fraction bar, clock, bar chart), maths rendering, 1 grade band, 1 language |
 | **2. Seeing the student** | Vision on student drawings, "show your working" exercises, handwriting recognition for answers |
 | **3. Personal** | Learner profile, spaced repetition of check-ins, parent/teacher dashboard, curriculum alignment (e.g. by country and grade) |
@@ -228,15 +300,19 @@ Children are the users, so this is a design requirement from the start, not an a
 
 | Concept | Prototype file |
 |---|---|
-| Drawing language | `src/whiteboard/types.ts` |
-| Hand-drawn renderer, pencil cursor, student pen | `src/whiteboard/Whiteboard.tsx`, `src/styles.css` |
-| Step player (voice and drawing in sync, interrupting) | `src/tutor/useLessonPlayer.ts` |
-| Brain interface plus a keyword-matching stand-in for the LLM | `src/tutor/brain.ts` |
-| Example lessons (and a generated one: multiplication for any a×b up to 10) | `src/tutor/lessons.ts` |
-| Voice in and out | `src/voice/speech.ts` |
-| 30/70 layout, chat, check-ins | `src/App.tsx`, `src/components/ChatPanel.tsx` |
+| Drawing language, check-ins, theme colour tokens | `src/whiteboard/types.ts` |
+| Board materials (chalk, graph paper, blueprint, lab notebook, sketchbook) | `src/whiteboard/themes.ts`, `src/styles.css` |
+| Animated renderer, chalk/pencil textures, tutor's tool, student pen | `src/whiteboard/Whiteboard.tsx` |
+| Step player (voice and drawing in sync, read-along, interrupting) | `src/tutor/useLessonPlayer.ts` |
+| Brain interface plus keyword-matching stand-ins for the LLM | `src/tutor/brain.ts` |
+| Kids lessons / high-school lessons | `src/tutor/kidsLessons.ts`, `src/tutor/teenLessons.ts` |
+| Chat, check-ins, stars (shared by both versions) | `src/shared/useTutorSession.ts` |
+| Voice in and out, voice picker | `src/voice/speech.ts`, `src/shared/VoicePanel.tsx`, `src/shared/useMic.ts` |
+| Kids classroom and Professor Hoot | `src/kids/KidsApp.tsx`, `src/kids/OwlTeacher.tsx` |
+| High-school study app | `src/teens/TeenApp.tsx` |
+| Landing (pick a version) | `src/App.tsx` |
 
-To move from prototype to MVP, replace `mockBrain` with an implementation of `TutorBrain` that calls a model with the `teach_on_whiteboard` tool and returns its input. Nothing else needs to change.
+To move from prototype to MVP, replace the two stand-in brains with implementations of `TutorBrain` that call a model with the `teach_on_whiteboard` tool, passing the level (kids or high school) in the system prompt. Nothing else needs to change.
 
 ---
 
@@ -245,5 +321,6 @@ To move from prototype to MVP, replace `mockBrain` with an implementation of `Tu
 1. **Device priority**: tablet first (touch pen is natural for kids) or laptop first?
 2. **Curriculum**: which country's or which board's syllabus should the first version follow?
 3. **Languages**: English only at first, or several languages from the start?
-4. **Answers vs. guidance**: should Dot ever give the direct answer to a homework problem?
-5. **Character**: an owl mascot, or a customisable avatar the child picks?
+4. **Answers vs. guidance**: should the tutor ever give the direct answer to a homework problem?
+5. **Character**: keep one owl mascot for kids, or let the child pick or customise an avatar?
+6. **Age switch**: should students pick their version, or should it follow a grade set by a parent or teacher?

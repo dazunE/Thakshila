@@ -1,4 +1,4 @@
-import { INK, type DrawCommand, type Lesson, type Pt } from '../whiteboard/types';
+import { INK, type CheckIn, type DrawCommand, type Lesson, type Pt } from '../whiteboard/types';
 
 /*
  * Hand-written demo lessons. Each one is exactly the JSON shape a real model
@@ -93,7 +93,13 @@ const fractions: Lesson = {
       ],
     },
   ],
-  checkIn: 'Your turn: how many quarters do you need to make the whole pizza? You can draw on the board to show me!',
+  checkIn: {
+    question: 'Your turn! How many quarters make one whole pizza?',
+    choices: ['2', '3', '4'],
+    answer: 2,
+    praise: 'Yes! Four quarters make one whole pizza. You are a fraction star!',
+    hint: 'Not quite. Count the slices on the pizza. How many pieces did we cut it into?',
+  },
 };
 
 // ---------- Science: the water cycle ----------
@@ -109,7 +115,7 @@ const waterCycle: Lesson = {
         { op: 'clear' },
         { op: 'path', d: `${wavyLine(0, 550, 520)} L550 640 L0 640 Z`, fill: INK.sky, color: INK.blue, duration: 1000 },
         { op: 'path', d: 'M540 640 L540 520 L700 340 L770 420 L860 300 L1000 500 L1000 640 Z', fill: INK.leaf, color: INK.green, duration: 1000 },
-        { op: 'text', at: [200, 590], text: 'sea', size: 34, color: INK.blue },
+        { op: 'text', at: [200, 590], text: 'sea', size: 34 },
       ],
     },
     {
@@ -151,7 +157,7 @@ const waterCycle: Lesson = {
       draw: [
         { op: 'path', id: 'river', d: 'M780 410 Q720 470 650 490 T530 530', color: INK.blue, width: 8, duration: 900 },
         { op: 'arrow', from: [620, 560], to: [470, 560], color: INK.blue },
-        { op: 'text', id: 'collLabel', at: [760, 600], text: 'collection', size: 32, color: INK.blue },
+        { op: 'text', id: 'collLabel', at: [760, 600], text: 'collection', size: 32 },
         { op: 'highlight', target: 'evapLabel' },
         { op: 'pause', ms: 400 },
         { op: 'highlight', target: 'condLabel' },
@@ -162,7 +168,13 @@ const waterCycle: Lesson = {
       ],
     },
   ],
-  checkIn: 'Quick quiz: when a puddle dries up on a sunny day, which part of the water cycle is that?',
+  checkIn: {
+    question: 'Quick quiz! A puddle dries up on a sunny day. Which part of the water cycle is that?',
+    choices: ['Evaporation', 'Condensation', 'Precipitation'],
+    answer: 0,
+    praise: "That's right! The sun warms the puddle and the water floats up into the sky. Evaporation!",
+    hint: 'Good try! Think about the sun warming the water. Does the water go up, or come down?',
+  },
 };
 
 // ---------- Science: photosynthesis ----------
@@ -230,7 +242,13 @@ const photosynthesis: Lesson = {
       ],
     },
   ],
-  checkIn: 'What do you think would happen to a plant kept in a dark cupboard for a week?',
+  checkIn: {
+    question: 'Which of these does a plant need to make its food?',
+    choices: ['Sunlight', 'Chocolate', 'Television'],
+    answer: 0,
+    praise: 'Yes! Plants need sunlight to make their food. No chocolate for plants!',
+    hint: 'Ha ha, plants would love that! But look at the board. What shines on the leaves?',
+  },
 };
 
 // ---------- Geography / Science: day and night ----------
@@ -266,7 +284,7 @@ const dayNight: Lesson = {
       say: 'The side facing away from the Sun is dark. For people there, it is night-time.',
       draw: [
         { op: 'wedge', center: [650, 320], r: 150, fromDeg: -90, toDeg: 90, fill: INK.night, color: INK.night, opacity: 0.8, duration: 800 },
-        { op: 'text', id: 'night', at: [730, 320], text: 'NIGHT', size: 34, color: '#f8fafc' },
+        { op: 'text', id: 'night', at: [730, 320], text: 'NIGHT', size: 34, color: INK.onNight },
         { op: 'emoji', at: [740, 240], char: '✨', size: 30 },
         { op: 'emoji', at: [700, 410], char: '⭐', size: 26 },
       ],
@@ -280,7 +298,13 @@ const dayNight: Lesson = {
       ],
     },
   ],
-  checkIn: "When it's daytime for you, is it daytime or night-time on the opposite side of the Earth?",
+  checkIn: {
+    question: "When it's daytime for you, what time is it on the other side of the Earth?",
+    choices: ['Daytime', 'Night-time'],
+    answer: 1,
+    praise: "Exactly! The other side is facing away from the Sun, so it's night-time there.",
+    hint: 'Look at the board again. Is the other side of the Earth facing the Sun?',
+  },
 };
 
 // ---------- Maths: multiplication (generated from the question) ----------
@@ -353,7 +377,21 @@ export function multiplicationLesson(a: number, b: number): Lesson {
           ]
         : []),
     ],
-    checkIn: `Can you tell me what ${a} × ${b + 1} would be? Hint: just add one more dot to each row!`,
+    checkIn: timesCheckIn(a, b),
+  };
+}
+
+function timesCheckIn(a: number, b: number): CheckIn {
+  const right = a * (b + 1);
+  // two believable wrong answers, never equal to the right one
+  const wrong = [a * b, right + a].filter((n) => n !== right);
+  const choices = [right, ...wrong].sort((x, y) => x - y);
+  return {
+    question: `Your turn! What is ${a} × ${b + 1}? (Add one more dot to each row.)`,
+    choices: choices.map(String),
+    answer: choices.indexOf(right),
+    praise: `Brilliant! ${a} × ${b + 1} = ${right}. One more dot in each row adds ${a} more.`,
+    hint: `Nearly! Start from ${a * b} and add one more dot to each of the ${a} rows.`,
   };
 }
 
@@ -365,7 +403,7 @@ export const greeting: Lesson = {
   subject: 'Chat',
   steps: [
     {
-      say: "Hi there! I'm Dot, your drawing tutor. Ask me anything, and I'll explain it by drawing it on this board.",
+      say: "Hello! I'm Professor Hoot, your teacher. Ask me anything, and I'll draw the answer on my chalkboard!",
       draw: [
         { op: 'clear' },
         { op: 'circle', center: [500, 280], r: 130, fill: INK.yellow, color: INK.orange, width: 6 },
@@ -373,8 +411,8 @@ export const greeting: Lesson = {
         { op: 'circle', center: [545, 240], r: 14, fill: INK.dark, duration: 150 },
         { op: 'path', d: 'M430 310 Q500 380 570 310', color: INK.dark, width: 6 },
         { op: 'emoji', at: [680, 180], char: '👋', size: 70 },
-        { op: 'text', at: [500, 480], text: "Hi, I'm Dot!", size: 54, color: INK.purple },
-        { op: 'text', at: [500, 550], text: 'Ask me anything 🙂', size: 32, color: INK.gray },
+        { op: 'text', at: [500, 480], text: 'Hello, class!', size: 60, color: INK.yellow },
+        { op: 'text', at: [500, 555], text: 'Tap the microphone and ask me anything', size: 32, color: INK.gray },
       ],
     },
   ],
@@ -387,7 +425,7 @@ export function fallback(question: string): Lesson {
     subject: 'Chat',
     steps: [
       {
-        say: `Ooh, that's a great question! This demo version of me only knows a few lessons so far. Try asking me about fractions, multiplying, the water cycle, how plants make food, or day and night.`,
+        say: `Ooh, what a great question! I'm still learning that one. Tap a picture to try one of my lessons: fractions, times tables, rain, plants, or day and night.`,
         draw: [
           { op: 'clear' },
           { op: 'text', at: [500, 90], text: `"${question.length > 40 ? question.slice(0, 40) + '…' : question}"`, size: 30, color: INK.gray },

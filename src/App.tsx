@@ -1,138 +1,100 @@
-import { useRef, useState } from 'react';
-import { ChatPanel, type Message } from './components/ChatPanel';
-import { mockBrain, type ChatTurn } from './tutor/brain';
-import { greeting } from './tutor/lessons';
-import { useLessonPlayer } from './tutor/useLessonPlayer';
-import { canSpeak } from './voice/speech';
-import { Whiteboard } from './whiteboard/Whiteboard';
-import type { Lesson, Pt } from './whiteboard/types';
+import { useEffect, useState } from 'react';
+import { KidsApp } from './kids/KidsApp';
+import { OwlTeacher } from './kids/OwlTeacher';
+import { TeenApp } from './teens/TeenApp';
+import { stopSpeaking, unlockSpeech } from './voice/speech';
+
+type Audience = 'kids' | 'teens';
+
+function audienceFromHash(): Audience | null {
+  const h = window.location.hash.replace('#', '');
+  return h === 'kids' || h === 'teens' ? h : null;
+}
+
+function setHash(a: Audience | null) {
+  try {
+    history.replaceState(null, '', a ? `#${a}` : window.location.pathname);
+  } catch {
+    /* some sandboxes block history changes; the app works without it */
+  }
+}
 
 export default function App() {
-  const [started, setStarted] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [thinking, setThinking] = useState(false);
-  const [voiceOn, setVoiceOn] = useState(canSpeak);
-  const [penActive, setPenActive] = useState(false);
-  const [studentStrokes, setStudentStrokes] = useState<Pt[][]>([]);
-  const idRef = useRef(0);
-  const runRef = useRef(0);
-  // each playback gets its own id so replays don't light up old bubbles
-  const playRef = useRef(0);
+  const [audience, setAudience] = useState<Audience | null>(audienceFromHash);
+  // true when the user just clicked, so the tutor may start talking straight away
+  const [autoStart, setAutoStart] = useState(false);
 
-  const push = (m: Omit<Message, 'id'>) => setMessages((ms) => [...ms, { ...m, id: ++idRef.current }]);
+  useEffect(() => {
+    document.title = audience === 'kids' ? 'Doodle Classroom' : audience === 'teens' ? 'Doodle Study' : 'Doodle Tutor';
+  }, [audience]);
 
-  const player = useLessonPlayer(voiceOn, {
-    onSay: (lesson, step, text) =>
-      push({
-        role: 'tutor',
-        text,
-        lessonId: String(playRef.current),
-        stepIndex: step,
-        kind: 'step',
-        lesson: step === 0 ? lesson : undefined,
-      }),
-    onFinish: (lesson) => {
-      if (lesson.checkIn) push({ role: 'tutor', text: lesson.checkIn, kind: 'checkin' });
-    },
-  });
-
-  const teach = (lesson: Lesson) => {
-    setStarted(true);
-    setStudentStrokes([]);
-    playRef.current++;
-    void player.play(lesson);
+  const choose = (a: Audience) => {
+    unlockSpeech(); // inside the click, so browsers allow the voice
+    stopSpeaking();
+    setAutoStart(true);
+    setAudience(a);
+    setHash(a);
   };
 
-  const ask = async (text: string) => {
-    const run = ++runRef.current;
-    setStarted(true);
-    player.stop(); // the student interrupting always wins
-    push({ role: 'student', text });
-    setThinking(true);
-    const history: ChatTurn[] = messages.map((m) => ({ role: m.role, text: m.text }));
-    const lesson = await mockBrain.respond(text, history);
-    if (run !== runRef.current) return; // a newer question arrived meanwhile
-    setThinking(false);
-    teach(lesson);
-  };
+  if (audience === 'kids') return <KidsApp key="kids" autoStart={autoStart} onSwitch={() => choose('teens')} />;
+  if (audience === 'teens') return <TeenApp key="teens" autoStart={autoStart} onSwitch={() => choose('kids')} />;
+  return <Landing onChoose={choose} />;
+}
 
-  const start = () => teach(greeting);
-
-  const playing = player.playing;
-
+function Landing({ onChoose }: { onChoose: (a: Audience) => void }) {
   return (
-    <div className="app">
-      <aside className="tutor-panel">
-        <ChatPanel
-          messages={messages}
-          speaking={playing ? { lessonId: String(playRef.current), step: playing.step } : null}
-          thinking={thinking}
-          voiceOn={voiceOn}
-          onToggleVoice={() => setVoiceOn((v) => !v)}
-          onSend={ask}
-          onReplay={teach}
-        />
-      </aside>
+    <div className="landing">
+      <header className="l-head">
+        <h1>Doodle Tutor</h1>
+        <p>Ask a question out loud. Your tutor answers by talking and drawing on the board at the same time.</p>
+      </header>
 
-      <main className="board-panel">
-        <div className="board-toolbar">
-          <div className="board-status">
-            {playing ? (
-              <>
-                <span className="live-dot" /> {playing.lesson.title}
-                <span className="steps">
-                  {playing.lesson.steps.map((_, i) => (
-                    <i key={i} className={i < playing.step ? 'done' : i === playing.step ? 'now' : ''} />
-                  ))}
-                </span>
-              </>
-            ) : (
-              <span className="muted">Whiteboard</span>
-            )}
+      <div className="l-cards">
+        <button className="l-card l-kids" onClick={() => onChoose('kids')}>
+          <div className="l-kids-board">
+            <OwlTeacher mood="idle" size={96} />
+            <svg viewBox="0 0 200 120" className="l-chalk" aria-hidden>
+              <circle cx="60" cy="60" r="38" />
+              <path d="M60 22 V98 M22 60 H98" />
+              <path d="M60 60 L60 22 A38 38 0 0 1 98 60 Z" className="l-chalk-fill" />
+              <text x="150" y="52">1</text>
+              <path d="M132 64 H168" />
+              <text x="150" y="100">4</text>
+            </svg>
           </div>
-          <div className="board-tools">
-            {playing && (
-              <button onClick={player.stop} title="Stop">
-                ⏹ Stop
-              </button>
-            )}
-            <button className={penActive ? 'on' : ''} onClick={() => setPenActive((p) => !p)} aria-pressed={penActive} title="Draw on the board yourself">
-              🖍 My pen
-            </button>
-            <button
-              onClick={() => {
-                player.stop();
-                player.clearBoard();
-                setStudentStrokes([]);
-              }}
-              title="Wipe the board"
-            >
-              🧽 Clear
-            </button>
+          <div className="l-card-body">
+            <span className="l-age">Ages 6–12</span>
+            <h2>Classroom</h2>
+            <p>Professor Hoot teaches on a chalkboard. Tap the mic and talk, or pick a picture. Answer questions to earn stars.</p>
+            <span className="l-go">Go to class →</span>
           </div>
-        </div>
+        </button>
 
-        <div className="board">
-          <Whiteboard
-            elements={player.elements}
-            highlighted={player.highlighted}
-            cursor={player.cursor}
-            penActive={penActive}
-            studentStrokes={studentStrokes}
-            onStudentStroke={(s) => setStudentStrokes((all) => [...all, s])}
-          />
-          {!started && (
-            <div className="start-overlay">
-              <div className="start-card">
-                <div className="big-owl">🦉</div>
-                <h1>Learn by drawing with Dot</h1>
-                <p>Ask a question by typing or talking. Dot will explain it out loud while drawing it on this board.</p>
-                <button onClick={start}>Start ▶</button>
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
+        <button className="l-card l-teens" onClick={() => onChoose('teens')}>
+          <div className="l-teen-boards" aria-hidden>
+            <span className="lb lb-graph">
+              <b>Maths</b>graph paper
+            </span>
+            <span className="lb lb-blueprint">
+              <b>Physics</b>blueprint
+            </span>
+            <span className="lb lb-lab">
+              <b>Chemistry</b>lab notebook
+            </span>
+            <span className="lb lb-sketch">
+              <b>Biology</b>sketchbook
+            </span>
+          </div>
+          <div className="l-card-body">
+            <span className="l-age">Ages 13–18</span>
+            <h2>Study</h2>
+            <p>Atlas works through problems step by step. The board changes to suit the subject you're studying.</p>
+            <span className="l-go">Start studying →</span>
+          </div>
+        </button>
+      </div>
+
+      <p className="l-note">Turn your sound on. The tutor talks to you.</p>
     </div>
   );
 }
